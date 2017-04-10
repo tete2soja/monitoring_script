@@ -311,7 +311,7 @@ if (isset($expected_result) && !isset($query)) {
 
 // Validate the hostname
 if (isset($db_host)) {
-    if (!preg_match("/^([a-zA-Z0-9-]+[\.])+([a-zA-Z0-9]+)$/", $db_host)) {
+    if (!preg_match("/^([a-zA-Z0-9-_]+[\.])+([a-zA-Z0-9_]+)$/", $db_host)) {
         print "UNKNOWN: Invalid characters in the hostname.\n";
         exit(3);
     }
