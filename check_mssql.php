@@ -7,6 +7,7 @@
 #
 # Version 0.6.6, Copyright (c) 2008 Gary Danko <gdanko@gmail.com>
 # Version 0.7.1                2013 Nicholas Scott <nscott@nagios.com>
+# Version 0.8.0                2017 Nicolas Le Gall
 # Notes:
 #
 #   Version 0.1.0 - 2008/08/14
@@ -86,6 +87,10 @@
 #   Version 0.7.9 - 2016/05/26
 #   - Changed from deprecated mssql functions to PDO
 #
+#   Version 0.8.0 - 2017/04/14
+#   - 
+#   - Add '_' for hostname
+#
 #   This plugin will check the general health of an MSSQL
 #   server. It will also report the query duration and allows
 #   you to set warning and critical thresholds based on the
@@ -114,7 +119,7 @@
 ############################################################################
 
 $progname = "check_mssql";
-$version = "0.7.9";
+$version = "0.8.0";
 $warning = "";
 $critical = "";
 $output_msg = "";
@@ -596,6 +601,7 @@ function copyright() {
     print <<<EOF
 Copyright (c) 2008 Gary Danko (gdanko@gmail.com)
           2012 Nicholas Scott (nscott@nagios.com)
+          2017 Nicolas Le Gall
 This plugin checks various aspect of an MSSQL server. It will also
 execute queries or stored procedures and return results based on
 query execution times and expected query results.
@@ -666,6 +672,7 @@ Options:
 
 Example: $progname -H myserver -U myuser -P mypass -q /tmp/query.sql -w 2 -c 5
 Example: $progname -H myserver -U myuser -P mypass -q "select count(*) from mytable" -r "632" -w 2 -c 5
+Example: $progname -H myserver -F mssql_cred.php -q "select count(*) from mytable" -r "632" -w 2 -c 5
 Send any questions regarding this utility to gdanko@gmail.com or scot0357@gmail.com.
 
 EOF;
