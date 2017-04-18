@@ -22,7 +22,7 @@ parser.add_option("-H", "--hostname", dest="hostname",
                   help="Hostname to perform WMI request", metavar="HOST")
 parser.add_option("-V", "--verbose",
                   action="store_true", dest="verbose", default=False,
-                  help="don't print status messages to stdout")
+                  help="Print status messages to stdout")
 
 (options, args) = parser.parse_args()
 
