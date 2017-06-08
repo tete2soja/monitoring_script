@@ -8,6 +8,7 @@
 # License : GPL
 #
 #  by   Karl Alexander Monzon.
+#  fixed by  Nicolas Le Gall
 #
 # Requirements :
 # Traceroute command and permisions.
@@ -15,6 +16,10 @@
 # Version 1.0 : 07/01/2007
 # Initial release.
 #
+# Version 1.1 : 14/04/2017
+# Remove useless code
+# Reformat switch case
+# Change debug output
 #
 ################################################################################
 
@@ -35,9 +40,14 @@ OUTPUT=''
 EXITCODE=3
 ERRORMSG="There was a problem."
 
-print_usage() {
+print_help() {
+    echo "Nagios Plugin:   $PROGNAME $REVISION"
+    echo "by Karl Alexander Monzon"
+    echo "fixed by Nicolas Le Gall"
+    echo ""
+    
     echo "Usage: $PROGNAME"
-    echo "check_route [host ip] [jump][route 1] [route 2] <debug>"
+    echo "check_route [host ip] [jump] [route 1] [route 2] <debug>"
     echo " "
     echo "Options:"
     echo "[host]: The name or IP address of the server to check."
@@ -49,28 +59,13 @@ print_usage() {
 
     echo "Example:"
     echo "check_route 10.160.254.1 2 192.168.1.1 10.160.2.1"
-}
 
-
-print_help() {
-    echo "Nagios Plugin:   $PROGNAME $REVISION"
-    echo "by Karl Alexander Monzon"
-    echo ""
-
-    print_usage
-
-    echo " "
-    support
     exit 0
 }
 
 
 case "$1" in
-    --help)
-        print_help
-        exit 0
-        ;;
-    -h)
+    --help | -h)
         print_help
         exit 0
         ;;
@@ -83,25 +78,26 @@ case "$1" in
         exit 0
         ;;
     *)
-
         if [ "$#" -lt 4 ]; then
             echo "This plugin requires 4 arguments."
             exit "4"
         fi
+
         if [ "$#" ==  4 ]; then
             DEBUG=0
         fi
 
-        if [ $DEBUG == 1 ]; then
-            echo "traceroute  -n $HOSTADDRESS | head -n $JUMP | tail -n 1"
-        fi
-
         JUMP=`expr $NJUMP + 1`
         RESULT=`traceroute  -n $HOSTADDRESS | head -n $JUMP | tail -n 1`
+
+        if [ $DEBUG == 1 ]; then
+            echo "command : traceroute -n $HOSTADDRESS | head -n $JUMP | tail -n 1"
+        fi
+
         SALTO=`echo $RESULT | cut -f 2 -d " "`
 
         if [ $DEBUG == 1 ]; then
-            echo $SALTO
+            echo "find : $SALTO"
         fi
 
         # Check for the error message in the error file.
@@ -120,7 +116,7 @@ case "$1" in
                     OUTPUT="TRACE Warning: Secondary Route $SALTO"
                     EXITCODE=1
                 else
-                    OUTPUT="TRACE Critical : Current Route to: $HOSTADDRESS   via: $SALTO"
+                    OUTPUT="TRACE Critical : Current Route to: $HOSTADDRESS via: $SALTO"
                     EXITCODE=2
                 fi
             fi
